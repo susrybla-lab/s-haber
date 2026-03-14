@@ -1,0 +1,19 @@
+backend:
+  name: git-gateway
+  branch: main # Senin GitHub dalın (genelde main olur)
+
+media_folder: "img" # Fotoğrafların yükleneceği klasör
+public_folder: "/img"
+
+collections:
+  - name: "haberler"
+    label: "Haberler"
+    folder: "haberler"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: "Haber Başlığı", name: "title", widget: "string" }
+      - { label: "Yayın Tarihi", name: "date", widget: "datetime" }
+      - { label: "Haber Görseli", name: "image", widget: "image" }
+      - { label: "Haber İçeriği", name: "body", widget: "markdown" }
+      - { label: "Yazar", name: "author", widget: "string", default: "İdris Samet Eker" }
