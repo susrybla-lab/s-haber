@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>S-Haber | En Hızlı ve Güvenilir Haberler</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+</head>
+<body class="light-theme">
+
+    <header>
+        <div class="container header-content">
+            <div class="logo" onclick="window.location.href='index.html'">S-HABER</div>
+            
+            <div class="search-bar">
+                <input type="text" id="searchInput" placeholder="Haber ara...">
+                <button onclick="searchNews()">🔍</button>
+            </div>
+
+            <nav>
+                <ul>
+                    <li><a href="#">Gündem</a></li>
+                    <li><a href="#">Ekonomi</a></li>
+                    <li><a href="#">Spor</a></li>
+                    <li><a href="#">Teknoloji</a></li>
+                </ul>
+            </nav>
+            <button id="theme-toggle" title="Tema Değiştir">🌙 / ☀️</button>
+        </div>
+    </header>
+
+    <div class="ticker-container">
+        <div class="ticker-label">SON DAKİKA</div>
+        <marquee>S-Haber yayın hayatına başladı! • Borsa İstanbul günü rekorla kapattı. • Ankara'da hava durumu normallerin üzerinde seyrediyor.</marquee>
+    </div>
+
+    <main class="container">
+        <section class="headline">
+            <div class="slider-container">
+                <div class="slides">
+                    <div class="slide active">
+                        <a href="haber-detay.html">
+                            <img src="https://picsum.photos/id/237/800/450" alt="Haber 1">
+                            <div class="slide-content">
+                                <span class="category">GÜNDEM</span>
+                                <h2>Gazetecilikte Dijital Dönüşüm: S-Haber Yayında!</h2>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="slide">
+                        <a href="haber-detay.html">
+                            <img src="https://picsum.photos/id/1/800/450" alt="Haber 2">
+                            <div class="slide-content">
+                                <span class="category">TEKNOLOJİ</span>
+                                <h2>Yapay Zeka Haber Yazımında Yeni Bir Çağ Başlatıyor.</h2>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <button class="prev" onclick="changeSlide(-1)">&#10094;</button>
+                <button class="next" onclick="changeSlide(1)">&#10095;</button>
+            </div>
+
+            <aside class="sidebar">
+                <h3>Çok Okunanlar</h3>
+                <ul class="top-list">
+                    <li><a href="haber-detay.html"><span class="number">1</span> Sivas Cumhuriyet Üniversitesi Projesi</a></li>
+                    <li><a href="haber-detay.html"><span class="number">2</span> Futbolda Transfer Hareketliliği</a></li>
+                    <li><a href="haber-detay.html"><span class="number">3</span> Yeni Akıllı Telefonlar Tanıtıldı</a></li>
+                    <li><a href="haber-detay.html"><span class="number">4</span> En İyi 10 Seyahat Rotası</a></li>
+                </ul>
+            </aside>
+        </section>
+
+        <section class="news-grid">
+            <div class="card" onclick="window.location.href='haber-detay.html'">
+                <img src="https://picsum.photos/id/60/300/200" alt="Haber">
+                <div class="card-body">
+                    <span class="tag">SPOR</span>
+                    <h3>Derbi Hazırlıkları Başladı</h3>
+                    <p>Hafta sonu oynanacak büyük maç öncesi takımlarda son durum...</p>
+                </div>
+            </div>
+            <div class="card" onclick="window.location.href='haber-detay.html'">
+                <img src="https://picsum.photos/id/26/300/200" alt="Haber">
+                <div class="card-body">
+                    <span class="tag">DÜNYA</span>
+                    <h3>İklim Zirvesinden Kararlar</h3>
+                    <p>Gelecek nesiller için atılan yeni adımlar neler?</p>
+                </div>
+            </div>
+            <div class="card" onclick="window.location.href='haber-detay.html'">
+                <img src="https://picsum.photos/id/48/300/200" alt="Haber">
+                <div class="card-body">
+                    <span class="tag">MAGAZİN</span>
+                    <h3>Ödül Töreninde Şıklık Yarışı</h3>
+                    <p>Yılın en çok beklenen gecesinde kazananlar belli oldu.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 S-Haber | İdris Samet Eker</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
