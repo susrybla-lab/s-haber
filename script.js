@@ -1,41 +1,94 @@
-let currentSlide = 0;
+const username = "susrybla-lab";
+const repo = "s-haber";
 
-function changeSlide(direction) {
+// TEMA DEĞİŞTİRME
+document.getElementById('theme-toggle').addEventListener('click', () => {
+    document.body.classList.toggle('dark-theme');
+    localStorage.setItem('theme', document.body.classList.contains('dark-theme') ? 'dark' : 'light');
+});
+if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark-theme');
+
+// HABERLERİ YÜKLE
+async function loadNews(categoryFilter = null) {
+    try {
+        const res = await fetch(`https://api.github.com/repos/${username}/${repo}/contents/haberler`);
+        const files = await res.json();
+        const mdFiles = files.filter(f => f.name.endsWith('.md')).reverse();
+
+        const grid = document.getElementById('panel-haberleri');
+        const slider = document.getElementById('dynamic-slider');
+        const sidebar = document.getElementById('sidebar-list');
+
+        if (!categoryFilter) { grid.innerHTML = ''; slider.innerHTML = ''; sidebar.innerHTML = ''; }
+        else { 
+            grid.innerHTML = ''; 
+            document.getElementById('grid-title').innerText = categoryFilter + " Haberleri";
+        }
+
+        let sliderCount = 0;
+
+        for (let file of mdFiles) {
+            const contentRes = await fetch(file.download_url);
+            const text = await contentRes.text();
+
+            const title = text.match(/title:\s*"(.*)"/)?.[1] || text.match(/title:\s*(.*)/)?.[1] || "Başlıksız";
+            const image = text.match(/image:\s*"(.*)"/)?.[1] || text.match(/image:\s*(.*)/)?.[1] || "img/placeholder.jpg";
+            const category = text.match(/category:\s*"(.*)"/)?.[1] || text.match(/category:\s*(.*)/)?.[1] || "Gündem";
+
+            // Kategori Filtreleme
+            if (categoryFilter && category.toLowerCase() !== categoryFilter.toLowerCase()) continue;
+
+            // GRID KARTI
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.innerHTML = `
+                <img src="${image}" alt="${title}">
+                <div class="card-body">
+                    <span style="color:red; font-size:12px; font-weight:bold;">${category.toUpperCase()}</span>
+                    <h3 style="font-size:16px;">${title}</h3>
+                    <a href="haber-detay.html?haber=${file.name}" style="color:var(--primary); text-decoration:none; font-weight:bold;">Devamını Oku →</a>
+                </div>
+            `;
+            grid.appendChild(card);
+
+            // MANŞET (Sadece Filtresizken ve ilk 3 haber)
+            if (!categoryFilter && sliderCount < 3) {
+                const slide = document.createElement('div');
+                slide.className = sliderCount === 0 ? 'slide active' : 'slide';
+                slide.innerHTML = `
+                    <a href="haber-detay.html?haber=${file.name}">
+                        <img src="${image}" alt="${title}">
+                        <div class="slide-content">
+                            <span class="category">${category}</span>
+                            <h2>${title}</h2>
+                        </div>
+                    </a>
+                `;
+                slider.appendChild(slide);
+                sliderCount++;
+            }
+        }
+    } catch (e) { console.log("Hata:", e); }
+}
+
+// SLIDER KONTROL
+let currentSlide = 0;
+function changeSlide(n) {
     const slides = document.querySelectorAll('.slide');
     if (slides.length === 0) return;
-
     slides[currentSlide].classList.remove('active');
-    currentSlide = (currentSlide + direction + slides.length) % slides.length;
+    currentSlide = (currentSlide + n + slides.length) % slides.length;
     slides[currentSlide].classList.add('active');
 }
+setInterval(() => changeSlide(1), 5000);
 
-// Otomatik Slider (5 saniyede bir)
-setInterval(() => {
-    changeSlide(1);
-}, 5000);
-
-const themeBtn = document.getElementById('theme-toggle');
-
-themeBtn.addEventListener('click', () => {
-    document.body.classList.toggle('dark-theme');
-    
-    // Tercihi hafızaya al (Sayfa yenilense de gitmez)
-    const isDark = document.body.classList.contains('dark-theme');
-    localStorage.setItem('theme', isDark ? 'dark' : 'light');
-});
-
-// Sayfa açıldığında hafızadaki temayı yükle
-if (localStorage.getItem('theme') === 'dark') {
-    document.body.classList.add('dark-theme');
-}
-
-// Arama Fonksiyonu
+// ARAMA
 function searchNews() {
-    const input = document.getElementById('searchInput').value.toLowerCase();
-    const cards = document.querySelectorAll('.card');
-    
-    cards.forEach(card => {
+    const term = document.getElementById('searchInput').value.toLowerCase();
+    document.querySelectorAll('.card').forEach(card => {
         const title = card.querySelector('h3').innerText.toLowerCase();
-        card.style.display = title.includes(input) ? "block" : "none";
+        card.style.display = title.includes(term) ? 'block' : 'none';
     });
 }
+
+loadNews();
