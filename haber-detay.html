@@ -3,46 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Haber Detay | S-Haber</title>
+    <title>Haber Detayı | S-Haber</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
 <body class="light-theme">
     <header>
         <div class="container header-content">
             <div class="logo" onclick="window.location.href='index.html'">S-HABER</div>
-            <nav>
-                <ul>
-                    <li><a href="index.html">Ana Sayfa</a></li>
-                    <li><a href="#">Gündem</a></li>
-                </ul>
-            </nav>
-            <button id="theme-toggle">🌙 / ☀️</button>
+            <button onclick="window.history.back()" class="btn-read">← Geri Dön</button>
         </div>
     </header>
 
-    <main class="container article-container">
-        <article class="news-article">
-            <nav class="breadcrumb">Anasayfa > Gündem > Detay</nav>
-            <h1 class="article-title">Gazetecilikte Dijital Dönüşüm: S-Haber Yayın Hayatına Başladı!</h1>
-            <div class="article-meta">
-                <span>📅 15 Mart 2026</span> | <span>✍️ Editör: İdris Samet Eker</span>
-            </div>
-            <img src="https://picsum.photos/id/237/1200/600" alt="Haber Görseli" class="featured-image">
-            <div class="article-content">
-                <p><strong>S-Haber bugün kapılarını açtı.</strong> Hedefimiz, en doğru bilgiyi en hızlı şekilde ulaştırmak.</p>
-                <p>Modern arayüzümüz ve kullanıcı dostu özelliklerimizle habercilikte yeni bir standart belirliyoruz.</p>
-                <blockquote>"Gerçek haber, herkesin saklamaya çalıştığı şeydir."</blockquote>
-                <p>Bizi takip etmeye devam edin!</p>
-            </div>
-            <div class="share-buttons">
-                <button class="share-btn fb">Facebook</button>
-                <button class="share-btn tw">X (Twitter)</button>
-            </div>
+    <main class="container detay-container">
+        <article id="news-article">
+            <h1 id="news-title">Yükleniyor...</h1>
+            <img id="news-image" src="" alt="" style="width:100%; border-radius:10px; margin: 20px 0; display:none;">
+            <div id="news-content" class="content-body"></div>
         </article>
     </main>
 
-    <footer><p>&copy; 2026 S-Haber</p></footer>
-    <script src="script.js"></script>
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const fileName = params.get('haber');
+
+        if (fileName) {
+            fetch(`https://raw.githubusercontent.com/susrybla-lab/s-haber/main/haberler/${fileName}`)
+                .then(res => res.text())
+                .then(text => {
+                    const title = text.match(/title:\s*"(.*)"/)?.[1] || text.match(/title:\s*(.*)/)?.[1];
+                    const image = text.match(/image:\s*"(.*)"/)?.[1] || text.match(/image:\s*(.*)/)?.[1];
+                    const content = text.split('---').pop();
+
+                    document.getElementById('news-title').innerText = title;
+                    if(image) {
+                        const img = document.getElementById('news-image');
+                        img.src = image;
+                        img.style.display = 'block';
+                    }
+                    document.getElementById('news-content').innerHTML = marked.parse(content);
+                });
+        }
+    </script>
 </body>
 </html>
