@@ -15,111 +15,90 @@
             <div class="logo" onclick="window.location.href='index.html'">S-HABER</div>
             
             <div class="search-bar">
-                <input type="text" id="searchInput" placeholder="Haber ara...">
-                <button onclick="searchNews()">🔍</button>
+                <input type="text" id="searchInput" placeholder="Haber ara..." onkeyup="searchNews()">
             </div>
 
             <nav>
-                <ul>
-                    <li><a href="#">Gündem</a></li>
-                    <li><a href="#">Ekonomi</a></li>
-                    <li><a href="#">Spor</a></li>
-                    <li><a href="#">Teknoloji</a></li>
+                <ul id="main-nav">
+                    <li><a href="#" onclick="filterCategory('Gündem')">Gündem</a></li>
+                    <li><a href="#" onclick="filterCategory('Ekonomi')">Ekonomi</a></li>
+                    <li><a href="#" onclick="filterCategory('Spor')">Spor</a></li>
+                    <li><a href="#" onclick="filterCategory('Teknoloji')">Teknoloji</a></li>
                 </ul>
             </nav>
-            <button id="theme-toggle" title="Tema Değiştir">🌙 / ☀️</button>
+            <button id="theme-toggle">🌙 / ☀️</button>
         </div>
     </header>
 
     <div class="ticker-container">
         <div class="ticker-label">SON DAKİKA</div>
-        <marquee>S-Haber yayın hayatına başladı! • Borsa İstanbul günü rekorla kapattı. • Sivas Cumhuriyet Üniversitesi Gazetecilik Bölümü dijitalde!</marquee>
+        <marquee id="ticker-text">S-Haber yayın hayatına başladı! • Sivas Cumhuriyet Üniversitesi'nde dijital dönüşüm.</marquee>
     </div>
 
     <main class="container">
-        <section class="headline">
-            <div class="slider-container">
-                <div class="slides" id="dynamic-slider">
-                    <div class="slide active">
-                        <img src="https://picsum.photos/id/237/800/450" alt="Yükleniyor">
-                        <div class="slide-content">
-                            <span class="category">S-HABER</span>
-                            <h2>Haberler Hazırlanıyor...</h2>
-                        </div>
-                    </div>
-                </div>
-                <button class="prev" onclick="changeSlide(-1)">&#10094;</button>
-                <button class="next" onclick="changeSlide(1)">&#10095;</button>
+        <section class="headline-section">
+            <div id="dynamic-news-list" class="news-grid">
+                <p>Haberler yükleniyor...</p>
             </div>
 
             <aside class="sidebar">
-                <h3>Çok Okunanlar</h3>
-                <ul class="top-list">
-                    <li><a href="#"><span class="number">1</span> Sivas Cumhuriyet Üniversitesi Projesi</a></li>
-                    <li><a href="#"><span class="number">2</span> Dijital Gazetecilikte Yeni Dönem</a></li>
-                </ul>
+                <h3>Öne Çıkanlar</h3>
+                <ul class="top-list" id="sidebar-list">
+                    </ul>
             </aside>
-        </section>
-
-        <section class="news-grid" id="panel-haberleri">
-            <p style="padding: 20px;">Haberler yükleniyor, lütfen bekleyin...</p>
         </section>
     </main>
 
     <footer>
-        <p>&copy; 2026 S-Haber | İdris Samet Eker</p>
+        <p>&copy; 2026 S-Haber | Editör: İdris Samet Eker</p>
     </footer>
 
     <script src="script.js"></script>
-
     <script>
-        const username = "susrybla-lab"; 
+        // Haberleri GitHub'dan çekme motoru
+        const username = "susrybla-lab";
         const repo = "s-haber";
-        const folder = "haberler";
-
-        async function haberleriYukle() {
+        
+        async function loadNews() {
             try {
-                const response = await fetch(`https://api.github.com/repos/${username}/${repo}/contents/${folder}`);
-                const files = await response.json();
-                const grid = document.getElementById('panel-haberleri');
-                grid.innerHTML = ''; // Temizle
+                const res = await fetch(`https://api.github.com/repos/${username}/${repo}/contents/haberler`);
+                const files = await res.json();
+                const grid = document.getElementById('dynamic-news-list');
+                const sidebar = document.getElementById('sidebar-list');
+                grid.innerHTML = '';
+                sidebar.innerHTML = '';
 
-                // Sadece .md olanları al ve en yeniyi başa koy
                 const mdFiles = files.filter(f => f.name.endsWith('.md')).reverse();
 
-                for (let file of mdFiles) {
-                    const res = await fetch(file.download_url);
-                    const text = await res.text();
+                for (let [index, file] of mdFiles.entries()) {
+                    const contentRes = await fetch(file.download_url);
+                    const text = await contentRes.text();
 
-                    // Basit bir Frontmatter parçalayıcı (Başlık ve Resmi bulur)
-                    const titleMatch = text.match(/title:\s*"(.*)"/) || text.match(/title:\s*(.*)/);
-                    const imageMatch = text.match(/image:\s*"(.*)"/) || text.match(/image:\s*(.*)/);
+                    const title = text.match(/title:\s*"(.*)"/)?.[1] || text.match(/title:\s*(.*)/)?.[1];
+                    const image = text.match(/image:\s*"(.*)"/)?.[1] || text.match(/image:\s*(.*)/)?.[1] || 'img/placeholder.jpg';
                     
-                    const baslik = titleMatch ? titleMatch[1] : file.name.replace('.md', '');
-                    const resim = imageMatch ? imageMatch[1] : 'img/placeholder.jpg';
-
-                    // Haber Kartı HTML'i (Senin tasarımına uygun)
+                    // Ana Grid Kartları
                     const card = document.createElement('div');
                     card.className = 'card';
-                    card.style.cursor = 'pointer';
-                    card.onclick = () => window.location.href = `haber-detay.html?haber=${file.name}`;
-                    
                     card.innerHTML = `
-                        <img src="${resim}" alt="${baslik}" style="width:100%; height:200px; object-fit:cover;">
+                        <img src="${image}" alt="${title}">
                         <div class="card-body">
-                            <span class="tag">YENİ</span>
-                            <h3>${baslik}</h3>
-                            <p>Haberi okumak için tıklayın...</p>
+                            <h3>${title}</h3>
+                            <a href="haber-detay.html?haber=${file.name}" class="btn-read">Devamı</a>
                         </div>
                     `;
                     grid.appendChild(card);
-                }
-            } catch (err) {
-                console.error("Haberler çekilirken hata oluştu:", err);
-            }
-        }
 
-        haberleriYukle();
+                    // Sidebar (Çok Okunanlar yerine Son Haberler)
+                    if(index < 5) {
+                        const li = document.createElement('li');
+                        li.innerHTML = `<a href="haber-detay.html?haber=${file.name}"><span class="number">${index+1}</span> ${title}</a>`;
+                        sidebar.appendChild(li);
+                    }
+                }
+            } catch (e) { grid.innerHTML = "Haberler şu an yüklenemiyor."; }
+        }
+        loadNews();
     </script>
 </body>
 </html>
