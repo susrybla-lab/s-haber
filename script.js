@@ -1,31 +1,26 @@
-// Arama Fonksiyonu (1. Sorunun Çözümü)
+let currentSlide = 0;
+
+function changeSlide(direction) {
+    const slides = document.querySelectorAll('.slide');
+    if (slides.length === 0) return;
+
+    slides[currentSlide].classList.remove('active');
+    currentSlide = (currentSlide + direction + slides.length) % slides.length;
+    slides[currentSlide].classList.add('active');
+}
+
+// Otomatik Slider (5 saniyede bir)
+setInterval(() => {
+    changeSlide(1);
+}, 5000);
+
+// Arama Fonksiyonu
 function searchNews() {
     const input = document.getElementById('searchInput').value.toLowerCase();
     const cards = document.querySelectorAll('.card');
     
     cards.forEach(card => {
         const title = card.querySelector('h3').innerText.toLowerCase();
-        if (title.includes(input)) {
-            card.style.display = "block";
-        } else {
-            card.style.display = "none";
-        }
+        card.style.display = title.includes(input) ? "block" : "none";
     });
-}
-
-// Tema Değiştirme
-const themeBtn = document.getElementById('theme-toggle');
-if(themeBtn) {
-    themeBtn.addEventListener('click', () => {
-        document.body.classList.toggle('dark-theme');
-        document.body.classList.toggle('light-theme');
-    });
-}
-
-// Kategori Filtreleme (4. Sorunun Çözümü)
-function filterCategory(cat) {
-    alert(cat + " haberleri filtreleniyor... (Bu özellik bir sonraki güncellemede tam otomatik olacak)");
-    // Şimdilik arama kutusuna kategori adını yazar
-    document.getElementById('searchInput').value = cat;
-    searchNews();
 }
