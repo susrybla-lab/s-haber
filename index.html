@@ -13,13 +13,11 @@
     <header>
         <div class="container header-content">
             <div class="logo" onclick="window.location.href='index.html'">S-HABER</div>
-            
             <div class="search-bar">
                 <input type="text" id="searchInput" placeholder="Haber ara..." onkeyup="searchNews()">
             </div>
-
             <nav>
-                <ul id="main-nav">
+                <ul>
                     <li><a href="#" onclick="filterCategory('Gündem')">Gündem</a></li>
                     <li><a href="#" onclick="filterCategory('Ekonomi')">Ekonomi</a></li>
                     <li><a href="#" onclick="filterCategory('Spor')">Spor</a></li>
@@ -32,20 +30,30 @@
 
     <div class="ticker-container">
         <div class="ticker-label">SON DAKİKA</div>
-        <marquee id="ticker-text">S-Haber yayın hayatına başladı! • Sivas Cumhuriyet Üniversitesi'nde dijital dönüşüm.</marquee>
+        <marquee>S-Haber yayın hayatına başladı! • Sivas Cumhuriyet Üniversitesi'nde dijital devrim • Yeni haberler yüklendi.</marquee>
     </div>
 
     <main class="container">
-        <section class="headline-section">
-            <div id="dynamic-news-list" class="news-grid">
-                <p>Haberler yükleniyor...</p>
+        <section class="headline-container">
+            <div class="slider-wrapper">
+                <div id="dynamic-slider" class="slides">
+                    <p>Öne çıkan haberler yükleniyor...</p>
+                </div>
+                <button class="prev" onclick="changeSlide(-1)">&#10094;</button>
+                <button class="next" onclick="changeSlide(1)">&#10095;</button>
             </div>
 
             <aside class="sidebar">
-                <h3>Öne Çıkanlar</h3>
+                <h3>Çok Okunanlar</h3>
                 <ul class="top-list" id="sidebar-list">
-                    </ul>
+                    <li>Yükleniyor...</li>
+                </ul>
             </aside>
+        </section>
+
+        <h2 style="margin-top:40px; border-left: 5px solid #e74c3c; padding-left: 15px;">Son Haberler</h2>
+        <section class="news-grid" id="panel-haberleri">
+            <p>Haberler yükleniyor...</p>
         </section>
     </main>
 
@@ -55,29 +63,55 @@
 
     <script src="script.js"></script>
     <script>
-        // Haberleri GitHub'dan çekme motoru
         const username = "susrybla-lab";
         const repo = "s-haber";
-        
-        async function loadNews() {
+
+        async function loadAllNews() {
             try {
                 const res = await fetch(`https://api.github.com/repos/${username}/${repo}/contents/haberler`);
                 const files = await res.json();
-                const grid = document.getElementById('dynamic-news-list');
-                const sidebar = document.getElementById('sidebar-list');
-                grid.innerHTML = '';
-                sidebar.innerHTML = '';
-
                 const mdFiles = files.filter(f => f.name.endsWith('.md')).reverse();
+
+                const slider = document.getElementById('dynamic-slider');
+                const sidebar = document.getElementById('sidebar-list');
+                const grid = document.getElementById('panel-haberleri');
+
+                slider.innerHTML = '';
+                sidebar.innerHTML = '';
+                grid.innerHTML = '';
 
                 for (let [index, file] of mdFiles.entries()) {
                     const contentRes = await fetch(file.download_url);
                     const text = await contentRes.text();
 
-                    const title = text.match(/title:\s*"(.*)"/)?.[1] || text.match(/title:\s*(.*)/)?.[1];
+                    const title = text.match(/title:\s*"(.*)"/)?.[1] || text.match(/title:\s*(.*)/)?.[1] || "Başlıksız";
                     const image = text.match(/image:\s*"(.*)"/)?.[1] || text.match(/image:\s*(.*)/)?.[1] || 'img/placeholder.jpg';
-                    
-                    // Ana Grid Kartları
+                    const category = text.match(/category:\s*"(.*)"/)?.[1] || "GÜNDEM";
+
+                    // 1. İLK 3 HABERİ SLIDER'A EKLE
+                    if (index < 3) {
+                        const slide = document.createElement('div');
+                        slide.className = index === 0 ? 'slide active' : 'slide';
+                        slide.innerHTML = `
+                            <a href="haber-detay.html?haber=${file.name}">
+                                <img src="${image}" alt="${title}">
+                                <div class="slide-content">
+                                    <span class="category">${category}</span>
+                                    <h2>${title}</h2>
+                                </div>
+                            </a>
+                        `;
+                        slider.appendChild(slide);
+                    }
+
+                    // 2. İLK 5 HABERİ SIDEBAR'A EKLE
+                    if (index < 5) {
+                        const li = document.createElement('li');
+                        li.innerHTML = `<a href="haber-detay.html?haber=${file.name}"><span class="number">${index + 1}</span> ${title}</a>`;
+                        sidebar.appendChild(li);
+                    }
+
+                    // 3. TÜM HABERLERİ AŞAĞIDAKİ GRİD'E EKLE
                     const card = document.createElement('div');
                     card.className = 'card';
                     card.innerHTML = `
@@ -88,17 +122,12 @@
                         </div>
                     `;
                     grid.appendChild(card);
-
-                    // Sidebar (Çok Okunanlar yerine Son Haberler)
-                    if(index < 5) {
-                        const li = document.createElement('li');
-                        li.innerHTML = `<a href="haber-detay.html?haber=${file.name}"><span class="number">${index+1}</span> ${title}</a>`;
-                        sidebar.appendChild(li);
-                    }
                 }
-            } catch (e) { grid.innerHTML = "Haberler şu an yüklenemiyor."; }
+            } catch (e) {
+                console.error("Haberler yüklenemedi:", e);
+            }
         }
-        loadNews();
+        loadAllNews();
     </script>
 </body>
 </html>
