@@ -1,27 +1,31 @@
-// TEMA KONTROLÜ
-const btn = document.getElementById("theme-toggle");
-btn.addEventListener("click", () => {
-    document.body.classList.toggle("dark-theme");
-    localStorage.setItem("theme", document.body.classList.contains("dark-theme") ? "dark" : "light");
-});
-
-if (localStorage.getItem("theme") === "dark") document.body.classList.add("dark-theme");
-
-// ARAMA FONKSİYONU
+// Arama Fonksiyonu (1. Sorunun Çözümü)
 function searchNews() {
-    const q = document.getElementById("searchInput").value;
-    if(q) alert("'" + q + "' aranıyor...");
+    const input = document.getElementById('searchInput').value.toLowerCase();
+    const cards = document.querySelectorAll('.card');
+    
+    cards.forEach(card => {
+        const title = card.querySelector('h3').innerText.toLowerCase();
+        if (title.includes(input)) {
+            card.style.display = "block";
+        } else {
+            card.style.display = "none";
+        }
+    });
 }
 
-// SLIDER SİSTEMİ
-let currentSlide = 0;
-const slides = document.querySelectorAll(".slide");
-
-function changeSlide(n) {
-    if(slides.length === 0) return;
-    slides[currentSlide].classList.remove("active");
-    currentSlide = (currentSlide + n + slides.length) % slides.length;
-    slides[currentSlide].classList.add("active");
+// Tema Değiştirme
+const themeBtn = document.getElementById('theme-toggle');
+if(themeBtn) {
+    themeBtn.addEventListener('click', () => {
+        document.body.classList.toggle('dark-theme');
+        document.body.classList.toggle('light-theme');
+    });
 }
 
-setInterval(() => changeSlide(1), 5000);
+// Kategori Filtreleme (4. Sorunun Çözümü)
+function filterCategory(cat) {
+    alert(cat + " haberleri filtreleniyor... (Bu özellik bir sonraki güncellemede tam otomatik olacak)");
+    // Şimdilik arama kutusuna kategori adını yazar
+    document.getElementById('searchInput').value = cat;
+    searchNews();
+}
