@@ -1,5 +1,6 @@
 const username = "susrybla-lab";
 const repo = "s-haber";
+const token = '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';
 
 // TEMA DEĞİŞTİRME
 document.getElementById('theme-toggle').addEventListener('click', () => {
@@ -93,9 +94,23 @@ function searchNews() {
 
 loadNews();
 
+// ANKET VERİLERİNİ YÜKLE
+async function loadVotes() {
+    try {
+        const response = await fetch(`https://api.github.com/repos/${username}/${repo}/contents/silincek/votes.json`);
+        const data = await response.json();
+        const content = atob(data.content);
+        console.log('Oy verileri GitHub\'dan yüklendi (script.js):', JSON.parse(content));
+        return JSON.parse(content);
+    } catch (error) {
+        console.error('Oy verileri yüklenirken hata (script.js):', error);
+        return [];
+    }
+}
+
 // ANKET SONUÇLARINI GÖSTER
-function anketSonuclariniGoster() {
-    const oylar = JSON.parse(localStorage.getItem('anketOylari')) || [];
+async function anketSonuclariniGoster() {
+    const oylar = await loadVotes();
     const sayilar = {};
     oylar.forEach(oy => {
         sayilar[oy.forma] = (sayilar[oy.forma] || 0) + 1;

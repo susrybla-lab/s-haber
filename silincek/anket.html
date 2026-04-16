@@ -27,49 +27,102 @@
                 <img src="forma1.jpeg" alt="Forma 1">
                 <br>
                 <p>Oy sayısı: <span id="oy-Forma 1">0</span></p>
-                <button onclick="oyVer('Forma 1')">Oy Ver - Forma 1</button>
+                <button onclick="(async () => await oyVer('Forma 1'))()">Oy Ver - Forma 1</button>
             </div>
             <div class="forma">
                 <img src="forma2.jpeg" alt="Forma 2">
                 <br>
                 <p>Oy sayısı: <span id="oy-Forma 2">0</span></p>
-                <button onclick="oyVer('Forma 2')">Oy Ver - Forma 2</button>
+                <button onclick="(async () => await oyVer('Forma 2'))()">Oy Ver - Forma 2</button>
             </div>
             <div class="forma">
                 <img src="forma3.jpeg" alt="Forma 3">
                 <br>
                 <p>Oy sayısı: <span id="oy-Forma 3">0</span></p>
-                <button onclick="oyVer('Forma 3')">Oy Ver - Forma 3</button>
+                <button onclick="(async () => await oyVer('Forma 3'))()">Oy Ver - Forma 3</button>
             </div>
             <div class="forma">
                 <img src="forma4.jpeg" alt="Forma 4">
                 <br>
                 <p>Oy sayısı: <span id="oy-Forma 4">0</span></p>
-                <button onclick="oyVer('Forma 4')">Oy Ver - Forma 4</button>
+                <button onclick="(async () => await oyVer('Forma 4'))()">Oy Ver - Forma 4</button>
             </div>
             <div class="forma">
                 <img src="forma5.jpeg" alt="Forma 5">
                 <br>
                 <p>Oy sayısı: <span id="oy-Forma 5">0</span></p>
-                <button onclick="oyVer('Forma 5')">Oy Ver - Forma 5</button>
+                <button onclick="(async () => await oyVer('Forma 5'))()">Oy Ver - Forma 5</button>
             </div>
             <div class="forma">
                 <img src="forma6.jpeg" alt="Forma 6">
                 <br>
                 <p>Oy sayısı: <span id="oy-Forma 6">0</span></p>
-                <button onclick="oyVer('Forma 6')">Oy Ver - Forma 6</button>
+                <button onclick="(async () => await oyVer('Forma 6'))()">Oy Ver - Forma 6</button>
             </div>
         </div>
 
         <br>
         <h3>Oy Verenler</h3>
         <ul id="oy-verenler-listesi"></ul>
-        <button onclick="indirOyVerenler()">Oy Verenleri İndir (TXT)</button>
+        <button onclick="(async () => await indirOyVerenler())()">Oy Verenleri İndir (TXT)</button>
+        <button onclick="(async () => await indirOyVerileriJSON())()">Oy Verilerini İndir (JSON)</button>
     </div>
 
     <script>
-        function oySayilariniGoster() {
-            const oylar = JSON.parse(localStorage.getItem('anketOylari')) || [];
+        // GitHub Repo bilgileri - kendi token'ınızı buraya koyun
+        const username = 'susrybla-lab';
+        const repo = 's-haber';
+        const token = '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';
+
+        async function loadVotes() {
+            try {
+                const response = await fetch(`https://api.github.com/repos/${username}/${repo}/contents/silincek/votes.json`);
+                const data = await response.json();
+                const content = atob(data.content);
+                console.log('Oy verileri GitHub\'dan yüklendi:', JSON.parse(content));
+                return JSON.parse(content);
+            } catch (error) {
+                console.error('Oy verileri yüklenirken hata:', error);
+                return [];
+            }
+        }
+
+        async function saveVotes(votes) {
+            try {
+                let sha = null;
+                try {
+                    const getRes = await fetch(`https://api.github.com/repos/${username}/${repo}/contents/silincek/votes.json`);
+                    const getData = await getRes.json();
+                    sha = getData.sha;
+                } catch (e) {
+                    // Dosya yoksa
+                }
+                const content = btoa(JSON.stringify(votes, null, 2));
+                const body = {
+                    message: 'Update votes',
+                    content: content
+                };
+                if (sha) body.sha = sha;
+                const response = await fetch(`https://api.github.com/repos/${username}/${repo}/contents/silincek/votes.json`, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `token ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(body)
+                });
+                if (response.ok) {
+                    console.log('Oy verileri GitHub\'a kaydedildi.');
+                } else {
+                    console.error('Kaydetme hatası:', response.status, await response.text());
+                }
+            } catch (error) {
+                console.error('Oy verileri kaydedilirken hata:', error);
+            }
+        }
+
+        async function oySayilariniGoster() {
+            const oylar = await loadVotes();
             const sayilar = {};
             oylar.forEach(oy => {
                 sayilar[oy.forma] = (sayilar[oy.forma] || 0) + 1;
@@ -91,8 +144,8 @@
             });
         }
 
-        function indirOyVerenler() {
-            const oylar = JSON.parse(localStorage.getItem('anketOylari')) || [];
+        async function indirOyVerenler() {
+            const oylar = await loadVotes();
             let text = 'Oy Verenler Listesi:\n\n';
             oylar.forEach(oy => {
                 text += `${oy.isim} - ${oy.forma}\n`;
@@ -106,14 +159,14 @@
             URL.revokeObjectURL(url);
         }
 
-        function oyVer(forma) {
+        async function oyVer(forma) {
             const isim = document.getElementById('isim').value.trim();
             if (!isim) {
                 alert('Lütfen isminizi girin!');
                 return;
             }
-            // Oyları localStorage'dan oku
-            let oylar = JSON.parse(localStorage.getItem('anketOylari')) || [];
+            // Oyları repo'dan oku
+            let oylar = await loadVotes();
             // İsim kontrolü: Eğer bu isim zaten oy vermişse, izin verme
             const zatenOyVermiş = oylar.some(oy => oy.isim.toLowerCase() === isim.toLowerCase());
             if (zatenOyVermiş) {
@@ -123,17 +176,26 @@
             // Yeni oy ekle
             oylar.push({isim, forma});
             // Kaydet
-            localStorage.setItem('anketOylari', JSON.stringify(oylar));
+            await saveVotes(oylar);
             alert(`${isim}, ${forma} için oy verdiğiniz için teşekkürler!`);
             console.log(`${isim} - ${forma}`);
             // İsim alanını temizle
             document.getElementById('isim').value = '';
             // Oy sayılarını güncelle
-            oySayilariniGoster();
+            await oySayilariniGoster();
         }
 
-        // Sayfa yüklenince oy sayılarını göster
-        window.onload = oySayilariniGoster;
+        async function indirOyVerileriJSON() {
+            const oylar = await loadVotes();
+            const blob = new Blob([JSON.stringify(oylar, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'oy-verileri.json';
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+        window.onload = async () => { await oySayilariniGoster(); };
     </script>
 </body>
 </html>
