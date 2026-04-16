@@ -92,3 +92,26 @@ function searchNews() {
 }
 
 loadNews();
+
+// ANKET SONUÇLARINI GÖSTER
+function anketSonuclariniGoster() {
+    const oylar = JSON.parse(localStorage.getItem('anketOylari')) || [];
+    const sayilar = {};
+    oylar.forEach(oy => {
+        sayilar[oy.forma] = (sayilar[oy.forma] || 0) + 1;
+    });
+    const sonucDiv = document.getElementById('anket-sonuclar');
+    if (Object.keys(sayilar).length === 0) {
+        sonucDiv.innerHTML = 'Henüz oy verilmemiş.';
+        return;
+    }
+    let html = '<ul>';
+    for (const [forma, sayi] of Object.entries(sayilar)) {
+        html += `<li>${forma}: ${sayi} oy</li>`;
+    }
+    html += '</ul>';
+    sonucDiv.innerHTML = html;
+}
+
+loadNews();
+anketSonuclariniGoster();

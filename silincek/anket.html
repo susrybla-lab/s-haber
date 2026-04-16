@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Geçici Anket - Forma Oy Ver</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .form-container { max-width: 600px; margin: auto; }
+        .forma { display: inline-block; margin: 10px; text-align: center; }
+        .forma img { width: 200px; height: 300px; border: 1px solid #ccc; }
+        button { padding: 10px 20px; margin: 5px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h1>Geçici Anket: En Sevdiğiniz Forma</h1>
+        <p>İsminizi girin ve favori formanızı seçin!</p>
+        <label for="isim">İsim:</label>
+        <input type="text" id="isim" placeholder="İsminizi girin"><br><br>
+        
+        <div class="formalar">
+            <div class="forma">
+                <img src="https://via.placeholder.com/200x300?text=Forma+1" alt="Forma 1">
+                <br>
+                <p>Oy sayısı: <span id="oy-Forma 1">0</span></p>
+                <button onclick="oyVer('Forma 1')">Oy Ver - Forma 1</button>
+            </div>
+            <div class="forma">
+                <img src="https://via.placeholder.com/200x300?text=Forma+2" alt="Forma 2">
+                <br>
+                <p>Oy sayısı: <span id="oy-Forma 2">0</span></p>
+                <button onclick="oyVer('Forma 2')">Oy Ver - Forma 2</button>
+            </div>
+            <div class="forma">
+                <img src="https://via.placeholder.com/200x300?text=Forma+3" alt="Forma 3">
+                <br>
+                <p>Oy sayısı: <span id="oy-Forma 3">0</span></p>
+                <button onclick="oyVer('Forma 3')">Oy Ver - Forma 3</button>
+            </div>
+            <div class="forma">
+                <img src="https://via.placeholder.com/200x300?text=Forma+4" alt="Forma 4">
+                <br>
+                <p>Oy sayısı: <span id="oy-Forma 4">0</span></p>
+                <button onclick="oyVer('Forma 4')">Oy Ver - Forma 4</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function oySayilariniGoster() {
+            const oylar = JSON.parse(localStorage.getItem('anketOylari')) || [];
+            const sayilar = {};
+            oylar.forEach(oy => {
+                sayilar[oy.forma] = (sayilar[oy.forma] || 0) + 1;
+            });
+            document.getElementById('oy-Forma 1').innerText = sayilar['Forma 1'] || 0;
+            document.getElementById('oy-Forma 2').innerText = sayilar['Forma 2'] || 0;
+            document.getElementById('oy-Forma 3').innerText = sayilar['Forma 3'] || 0;
+            document.getElementById('oy-Forma 4').innerText = sayilar['Forma 4'] || 0;
+        }
+
+        function oyVer(forma) {
+            const isim = document.getElementById('isim').value;
+            if (!isim) {
+                alert('Lütfen isminizi girin!');
+                return;
+            }
+            // Oyları localStorage'dan oku
+            let oylar = JSON.parse(localStorage.getItem('anketOylari')) || [];
+            // Yeni oy ekle
+            oylar.push({isim, forma});
+            // Kaydet
+            localStorage.setItem('anketOylari', JSON.stringify(oylar));
+            alert(`${isim}, ${forma} için oy verdiğiniz için teşekkürler!`);
+            console.log(`${isim} - ${forma}`);
+            // Oy sayılarını güncelle
+            oySayilariniGoster();
+        }
+
+        // Sayfa yüklenince oy sayılarını göster
+        window.onload = oySayilariniGoster;
+    </script>
+</body>
+</html>
