@@ -74,11 +74,27 @@
         const repo = 's-haber';
         const token = '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';
 
+        function base64EncodeUnicode(str) {
+            return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, function(match, p1) {
+                return String.fromCharCode('0x' + p1);
+            }));
+        }
+
+        function base64DecodeUnicode(str) {
+            return decodeURIComponent(Array.prototype.map.call(atob(str), function(c) {
+                return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+            }).join(''));
+        }
+
         async function loadVotes() {
             try {
                 const response = await fetch(`https://api.github.com/repos/${username}/${repo}/contents/silincek/votes.json`);
+                if (!response.ok) {
+                    console.error('Oy verileri yüklenirken hata:', response.status, await response.text());
+                    return [];
+                }
                 const data = await response.json();
-                const content = atob(data.content);
+                const content = base64DecodeUnicode(data.content);
                 console.log('Oy verileri GitHub\'dan yüklendi:', JSON.parse(content));
                 return JSON.parse(content);
             } catch (error) {
@@ -97,7 +113,7 @@
                 } catch (e) {
                     // Dosya yoksa
                 }
-                const content = btoa(JSON.stringify(votes, null, 2));
+                const content = base64EncodeUnicode(JSON.stringify(votes, null, 2));
                 const body = {
                     message: 'Update votes',
                     content: content
@@ -107,17 +123,24 @@
                     method: 'PUT',
                     headers: {
                         'Authorization': `token ${token}`,
+                        'Accept': 'application/vnd.github+json',
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify(body)
                 });
                 if (response.ok) {
                     console.log('Oy verileri GitHub\'a kaydedildi.');
+                    return true;
                 } else {
-                    console.error('Kaydetme hatası:', response.status, await response.text());
+                    const text = await response.text();
+                    console.error('Kaydetme hatası:', response.status, text);
+                    alert('Oy kaydedilemedi. Token veya GitHub izinlerini kontrol edin.');
+                    return false;
                 }
             } catch (error) {
                 console.error('Oy verileri kaydedilirken hata:', error);
+                alert('Oy kaydedilirken bir hata oluştu. Konsolu kontrol edin.');
+                return false;
             }
         }
 
@@ -176,7 +199,8 @@
             // Yeni oy ekle
             oylar.push({isim, forma});
             // Kaydet
-            await saveVotes(oylar);
+            const saved = await saveVotes(oylar);
+            if (!saved) return;
             alert(`${isim}, ${forma} için oy verdiğiniz için teşekkürler!`);
             console.log(`${isim} - ${forma}`);
             // İsim alanını temizle
