@@ -60,6 +60,11 @@
                 <button onclick="oyVer('Forma 6')">Oy Ver - Forma 6</button>
             </div>
         </div>
+
+        <br>
+        <h3>Oy Verenler</h3>
+        <ul id="oy-verenler-listesi"></ul>
+        <button onclick="indirOyVerenler()">Oy Verenleri İndir (TXT)</button>
     </div>
 
     <script>
@@ -75,6 +80,30 @@
             document.getElementById('oy-Forma 4').innerText = sayilar['Forma 4'] || 0;
             document.getElementById('oy-Forma 5').innerText = sayilar['Forma 5'] || 0;
             document.getElementById('oy-Forma 6').innerText = sayilar['Forma 6'] || 0;
+
+            // Oy verenleri listele
+            const listesi = document.getElementById('oy-verenler-listesi');
+            listesi.innerHTML = '';
+            oylar.forEach(oy => {
+                const li = document.createElement('li');
+                li.textContent = `${oy.isim} - ${oy.forma}`;
+                listesi.appendChild(li);
+            });
+        }
+
+        function indirOyVerenler() {
+            const oylar = JSON.parse(localStorage.getItem('anketOylari')) || [];
+            let text = 'Oy Verenler Listesi:\n\n';
+            oylar.forEach(oy => {
+                text += `${oy.isim} - ${oy.forma}\n`;
+            });
+            const blob = new Blob([text], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'oy-verenler.txt';
+            a.click();
+            URL.revokeObjectURL(url);
         }
 
         function oyVer(forma) {
