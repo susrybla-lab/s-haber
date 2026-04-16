@@ -10,9 +10,12 @@
         .forma { display: inline-block; margin: 10px; text-align: center; }
         .forma img { width: 200px; height: 300px; border: 1px solid #ccc; }
         button { padding: 10px 20px; margin: 5px; cursor: pointer; }
+        .back-button { position: absolute; top: 20px; left: 20px; padding: 10px 20px; background-color: #e74c3c; color: white; border: none; cursor: pointer; }
     </style>
 </head>
 <body>
+    <button class="back-button" onclick="window.location.href='../index.html'">Ana Menüye Dön</button>
+
     <div class="form-container">
         <h1>Geçici Anket: En Sevdiğiniz Forma</h1>
         <p>İsminizi girin ve favori formanızı seçin!</p>
@@ -21,28 +24,40 @@
         
         <div class="formalar">
             <div class="forma">
-                <img src="https://via.placeholder.com/200x300?text=Forma+1" alt="Forma 1">
+                <img src="forma1.jpeg" alt="Forma 1">
                 <br>
                 <p>Oy sayısı: <span id="oy-Forma 1">0</span></p>
                 <button onclick="oyVer('Forma 1')">Oy Ver - Forma 1</button>
             </div>
             <div class="forma">
-                <img src="https://via.placeholder.com/200x300?text=Forma+2" alt="Forma 2">
+                <img src="forma2.jpeg" alt="Forma 2">
                 <br>
                 <p>Oy sayısı: <span id="oy-Forma 2">0</span></p>
                 <button onclick="oyVer('Forma 2')">Oy Ver - Forma 2</button>
             </div>
             <div class="forma">
-                <img src="https://via.placeholder.com/200x300?text=Forma+3" alt="Forma 3">
+                <img src="forma3.jpeg" alt="Forma 3">
                 <br>
                 <p>Oy sayısı: <span id="oy-Forma 3">0</span></p>
                 <button onclick="oyVer('Forma 3')">Oy Ver - Forma 3</button>
             </div>
             <div class="forma">
-                <img src="https://via.placeholder.com/200x300?text=Forma+4" alt="Forma 4">
+                <img src="forma4.jpeg" alt="Forma 4">
                 <br>
                 <p>Oy sayısı: <span id="oy-Forma 4">0</span></p>
                 <button onclick="oyVer('Forma 4')">Oy Ver - Forma 4</button>
+            </div>
+            <div class="forma">
+                <img src="forma5.jpeg" alt="Forma 5">
+                <br>
+                <p>Oy sayısı: <span id="oy-Forma 5">0</span></p>
+                <button onclick="oyVer('Forma 5')">Oy Ver - Forma 5</button>
+            </div>
+            <div class="forma">
+                <img src="forma6.jpeg" alt="Forma 6">
+                <br>
+                <p>Oy sayısı: <span id="oy-Forma 6">0</span></p>
+                <button onclick="oyVer('Forma 6')">Oy Ver - Forma 6</button>
             </div>
         </div>
     </div>
@@ -58,16 +73,24 @@
             document.getElementById('oy-Forma 2').innerText = sayilar['Forma 2'] || 0;
             document.getElementById('oy-Forma 3').innerText = sayilar['Forma 3'] || 0;
             document.getElementById('oy-Forma 4').innerText = sayilar['Forma 4'] || 0;
+            document.getElementById('oy-Forma 5').innerText = sayilar['Forma 5'] || 0;
+            document.getElementById('oy-Forma 6').innerText = sayilar['Forma 6'] || 0;
         }
 
         function oyVer(forma) {
-            const isim = document.getElementById('isim').value;
+            const isim = document.getElementById('isim').value.trim();
             if (!isim) {
                 alert('Lütfen isminizi girin!');
                 return;
             }
             // Oyları localStorage'dan oku
             let oylar = JSON.parse(localStorage.getItem('anketOylari')) || [];
+            // İsim kontrolü: Eğer bu isim zaten oy vermişse, izin verme
+            const zatenOyVermiş = oylar.some(oy => oy.isim.toLowerCase() === isim.toLowerCase());
+            if (zatenOyVermiş) {
+                alert(`${isim}, zaten oy verdiniz! Bir daha oy veremezsiniz.`);
+                return;
+            }
             // Yeni oy ekle
             oylar.push({isim, forma});
             // Kaydet
