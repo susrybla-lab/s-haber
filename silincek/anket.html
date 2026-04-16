@@ -126,6 +126,8 @@
             localStorage.setItem('anketOylari', JSON.stringify(oylar));
             alert(`${isim}, ${forma} için oy verdiğiniz için teşekkürler!`);
             console.log(`${isim} - ${forma}`);
+            // İsim alanını temizle
+            document.getElementById('isim').value = '';
             // Oy sayılarını güncelle
             oySayilariniGoster();
         }
