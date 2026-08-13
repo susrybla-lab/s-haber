@@ -1,6 +1,5 @@
 const username = "susrybla-lab";
 const repo = "s-haber";
-const token = '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';
 
 // TEMA DEĞİŞTİRME
 document.getElementById('theme-toggle').addEventListener('click', () => {

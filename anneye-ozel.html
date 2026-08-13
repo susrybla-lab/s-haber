@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>İyi ki doğdun Anne</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="light-theme birthday-page">
+    <header>
+        <div class="container header-content">
+            <a class="logo" href="index.html" aria-label="S-Haber ana sayfa">S-HABER</a>
+            <nav><ul><li><a href="index.html">Ana Sayfa</a></li></ul></nav>
+        </div>
+    </header>
+
+    <main class="birthday-shell container">
+        <section class="birthday-card birthday-login" id="birthday-login" aria-labelledby="birthday-login-title">
+            <p class="birthday-kicker">Sana özel bir mesaj var</p>
+            <h1 id="birthday-login-title">İyi ki doğdun, Anne.</h1>
+            <p>Bu küçük sürprizi açmak için sana verilen özel kodu gir.</p>
+            <form id="birthday-form" novalidate>
+                <label for="birthday-code">Özel kod</label>
+                <div class="birthday-code-row">
+                    <input id="birthday-code" name="code" type="password" inputmode="text" autocomplete="off" placeholder="Kodu yaz" required>
+                    <button type="submit">Sürprizi aç</button>
+                </div>
+                <p id="birthday-error" class="birthday-error" role="alert" aria-live="polite"></p>
+            </form>
+            <p class="birthday-note">İpucu: Bu kod sana sevgiyle verildi. ♡</p>
+        </section>
+
+        <section class="birthday-card birthday-surprise" id="birthday-surprise" hidden aria-labelledby="birthday-title">
+            <p class="birthday-kicker">Bugün senin günün</p>
+            <span class="birthday-crown" aria-hidden="true">✦</span>
+            <h1 id="birthday-title">İyi ki varsın, Anne.</h1>
+            <p class="birthday-lead">Hayatımıza kattığın sevgi, güç ve sıcaklık için sana ne kadar teşekkür etsek az.</p>
+            <div class="birthday-divider" aria-hidden="true">♥</div>
+            <div class="birthday-message">
+                <p>Her güzel anımızda senin emeğin, her zor günümüzde senin desteğin var. Gülüşün hiç eksilmesin; yeni yaşın sağlık, huzur ve dilediğin tüm güzelliklerle dolsun.</p>
+                <p><strong>Seni çok seviyoruz. İyi ki doğdun!</strong></p>
+            </div>
+            <div class="birthday-balloons" aria-hidden="true"><span>●</span><span>●</span><span>●</span><span>●</span><span>●</span></div>
+            <button class="birthday-reset" id="birthday-reset" type="button">Giriş ekranına dön</button>
+        </section>
+    </main>
+
+    <footer><p>Senin için sevgiyle hazırlandı. ♥</p></footer>
+    <script src="birthday.js"></script>
+</body>
+</html>
