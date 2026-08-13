@@ -8,7 +8,6 @@ const ACCESS_KEY = 's-haber-birthday-access';
 
 const encoder = new TextEncoder();
 const login = document.getElementById('birthday-login');
-const surprise = document.getElementById('birthday-surprise');
 const form = document.getElementById('birthday-form');
 const codeInput = document.getElementById('birthday-code');
 const error = document.getElementById('birthday-error');
@@ -18,13 +17,9 @@ async function sha256(value) {
     return [...new Uint8Array(buffer)].map(byte => byte.toString(16).padStart(2, '0')).join('');
 }
 
-function revealSurprise() {
-    login.hidden = true;
-    surprise.hidden = false;
-    document.title = 'İyi ki doğdun Anne ♥';
+if (sessionStorage.getItem(ACCESS_KEY) === 'granted') {
+    window.location.replace('anneye-surpriz.html');
 }
-
-if (sessionStorage.getItem(ACCESS_KEY) === 'granted') revealSurprise();
 
 form.addEventListener('submit', async (event) => {
     event.preventDefault();
@@ -33,19 +28,10 @@ form.addEventListener('submit', async (event) => {
 
     if (enteredHash === BIRTHDAY_CODE_HASH) {
         sessionStorage.setItem(ACCESS_KEY, 'granted');
-        revealSurprise();
+        window.location.assign('anneye-surpriz.html');
         return;
     }
 
     error.textContent = 'Bu kod doğru görünmüyor. Bir kez daha deneyelim mi?';
     codeInput.select();
-});
-
-document.getElementById('birthday-reset').addEventListener('click', () => {
-    sessionStorage.removeItem(ACCESS_KEY);
-    surprise.hidden = true;
-    login.hidden = false;
-    codeInput.value = '';
-    codeInput.focus();
-    document.title = 'İyi ki doğdun Anne';
 });

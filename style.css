@@ -88,3 +88,25 @@ nav a { text-decoration: none; color: var(--text); font-weight: 600; font-size: 
 .birthday-reset { background: transparent; border: 1px solid var(--border); color: var(--text); font-size: .85rem; padding: 10px 14px; }
 .birthday-page footer { margin-top: auto; }
 @media (max-width: 560px) { .birthday-shell { padding-top: 28px; padding-bottom: 28px; }.birthday-code-row { flex-direction: column; }.birthday-code-row button { width: 100%; } }
+
+/* SÜRPRİZ SAYFASI */
+.surprise-container { width: min(100% - 40px, 920px); padding: 58px 0 70px; }
+.surprise-hero, .surprise-section { background: var(--card-bg); border: 1px solid var(--border); border-radius: 16px; box-shadow: 0 14px 40px rgba(45, 52, 54, .08); box-sizing: border-box; margin-bottom: 22px; padding: clamp(28px, 6vw, 54px); }
+.surprise-hero { text-align: center; background: linear-gradient(135deg, rgba(231, 76, 60, .10), transparent 65%), var(--card-bg); }
+.surprise-hero h1 { font-family: 'Playfair Display', Georgia, serif; font-size: clamp(2.5rem, 8vw, 5.25rem); line-height: 1; margin: 16px 0; }
+.surprise-hero > p:not(.birthday-kicker) { font-size: 1.12rem; line-height: 1.7; margin: 0 auto; max-width: 580px; }
+.surprise-section h2 { font-family: 'Playfair Display', Georgia, serif; font-size: clamp(1.75rem, 4vw, 2.5rem); margin: 10px 0 20px; }
+.countdown-section { text-align: center; }
+.countdown { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 28px; }
+.countdown div { background: rgba(231, 76, 60, .08); border-radius: 10px; padding: 16px 8px; }
+.countdown strong { display: block; color: var(--primary); font-size: clamp(1.65rem, 5vw, 2.75rem); }.countdown span { font-size: .75rem; font-weight: 800; text-transform: uppercase; }
+.countdown-message { color: #777; margin: 20px 0 0; }
+.section-intro { color: #777; line-height: 1.6; }.section-intro code, .video-frame code { color: var(--primary); font-family: monospace; }
+.memory-gallery { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 26px; }
+.memory-gallery figure { background: var(--bg); border: 1px dashed var(--border); border-radius: 10px; margin: 0; min-height: 210px; overflow: hidden; position: relative; }
+.memory-gallery img { display: block; height: 210px; object-fit: cover; width: 100%; }.memory-gallery figcaption { background: rgba(45, 52, 54, .7); bottom: 0; color: #fff; font-size: .8rem; left: 0; padding: 9px; position: absolute; right: 0; }
+.memory-gallery figure.media-empty { display: grid; place-items: center; }.memory-gallery figure.media-empty::before { color: var(--primary); content: '♡'; font-size: 3rem; }.memory-gallery figure.media-empty figcaption { background: transparent; color: var(--text); position: static; text-align: center; }
+.video-frame { align-items: center; background: #24292b; border-radius: 10px; color: #fff; display: flex; justify-content: center; min-height: 360px; overflow: hidden; text-align: center; }.video-frame video { max-height: 500px; width: 100%; }.video-frame p { padding: 24px; }.video-frame.media-empty::before { content: '▶'; border: 2px solid var(--primary); border-radius: 50%; color: var(--primary); display: grid; font-size: 1.5rem; height: 50px; margin-right: 12px; place-items: center; width: 50px; }
+.memory-timeline { border-left: 2px solid var(--primary); list-style: none; margin: 28px 0 0 12px; padding: 0 0 0 28px; }.memory-timeline li { display: flex; gap: 17px; margin-bottom: 25px; position: relative; }.memory-timeline li::before { background: var(--primary); border: 4px solid var(--card-bg); border-radius: 50%; content: ''; height: 10px; left: -35px; position: absolute; top: 5px; width: 10px; }.memory-timeline span { color: var(--primary); font-size: .8rem; font-weight: 800; }.memory-timeline strong { display: block; margin-bottom: 4px; }.memory-timeline p { color: #777; line-height: 1.6; margin: 0; }
+.surprise-container > .birthday-reset { display: block; margin: 34px auto 0; }
+@media (max-width: 650px) { .memory-gallery { grid-template-columns: 1fr; }.memory-gallery figure, .memory-gallery img { min-height: 250px; height: 250px; }.video-frame { min-height: 220px; }.countdown { gap: 7px; }.countdown div { padding: 13px 4px; } }
