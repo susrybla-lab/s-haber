@@ -33,13 +33,6 @@ function updateCountdown() {
 updateCountdown();
 setInterval(updateCountdown, 1000);
 
-const video = document.getElementById('birthday-video');
-video.addEventListener('canplay', () => {
-    video.hidden = false;
-    document.getElementById('video-placeholder').hidden = true;
-    document.getElementById('video-frame').classList.remove('media-empty');
-});
-
 document.getElementById('birthday-logout').addEventListener('click', () => {
     sessionStorage.removeItem(ACCESS_KEY);
     window.location.replace('anneye-ozel.html');

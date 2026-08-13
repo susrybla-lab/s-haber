@@ -1,37 +1,42 @@
-/*
- * Static-site note: this creates a friendly gate, not a secure login.
- * Change BIRTHDAY_CODE_HASH to the SHA-256 hash of your chosen code before publishing.
- * Default code: ANNE2026
- */
-const BIRTHDAY_CODE_HASH = '755444b8e20d2a5731b2a4ded1a6553ad518776ff5b079aaa93ba91b4f221b72';
-const ACCESS_KEY = 's-haber-birthday-access';
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>İyi ki doğdun Anne</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="light-theme birthday-page">
+    <header>
+        <div class="container header-content">
+            <a class="logo" href="index.html" aria-label="S-Haber ana sayfa">S-HABER</a>
+            <nav><ul><li><a href="index.html">Ana Sayfa</a></li></ul></nav>
+        </div>
+    </header>
 
-const encoder = new TextEncoder();
-const login = document.getElementById('birthday-login');
-const form = document.getElementById('birthday-form');
-const codeInput = document.getElementById('birthday-code');
-const error = document.getElementById('birthday-error');
+    <main class="birthday-shell container">
+        <section class="birthday-card birthday-login" id="birthday-login" aria-labelledby="birthday-login-title">
+            <p class="birthday-kicker">Sana özel bir mesaj var</p>
+            <h1 id="birthday-login-title">İyi ki doğdun, Anne.</h1>
+            <p>Bu küçük sürprizi açmak için sana verilen özel kodu gir.</p>
+            <form id="birthday-form" novalidate>
+                <label for="birthday-code">Özel kod</label>
+                <div class="birthday-code-row">
+                    <input id="birthday-code" name="code" type="password" inputmode="text" autocomplete="off" placeholder="Kodu yaz" required>
+                    <button type="submit">Sürprizi aç</button>
+                </div>
+                <p id="birthday-error" class="birthday-error" role="alert" aria-live="polite"></p>
+            </form>
+            <p class="birthday-note">İpucu: Bu kod sana sevgiyle verildi. ♡</p>
+        </section>
 
-async function sha256(value) {
-    const buffer = await crypto.subtle.digest('SHA-256', encoder.encode(value));
-    return [...new Uint8Array(buffer)].map(byte => byte.toString(16).padStart(2, '0')).join('');
-}
+    </main>
 
-if (sessionStorage.getItem(ACCESS_KEY) === 'granted') {
-    window.location.replace('anneye-surpriz.html');
-}
-
-form.addEventListener('submit', async (event) => {
-    event.preventDefault();
-    error.textContent = '';
-    const enteredHash = await sha256(codeInput.value.trim());
-
-    if (enteredHash === BIRTHDAY_CODE_HASH) {
-        sessionStorage.setItem(ACCESS_KEY, 'granted');
-        window.location.assign('anneye-surpriz.html');
-        return;
-    }
-
-    error.textContent = 'Bu kod doğru görünmüyor. Bir kez daha deneyelim mi?';
-    codeInput.select();
-});
+    <footer><p>Senin için sevgiyle hazırlandı. ♥</p></footer>
+    <script src="birthday.js"></script>
+</body>
+</html>
