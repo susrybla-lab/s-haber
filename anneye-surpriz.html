@@ -1,11 +1,84 @@
-Bu klasöre kendi fotoğraf ve videolarını koy.
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Anneye özel bir gün ♥</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="light-theme birthday-page surprise-page">
+    <main class="surprise-container container">
+        <section class="surprise-hero" aria-labelledby="surprise-title">
+            <p class="birthday-kicker">Bugün senin günün</p>
+            <span class="birthday-crown" aria-hidden="true">✦</span>
+            <h1 id="surprise-title">İyi ki varsın, Anne.</h1>
+            <p>Hayatımıza kattığın sevgi, güç ve sıcaklık için sana ne kadar teşekkür etsek az.</p>
+            <div class="birthday-balloons" aria-hidden="true"><span>●</span><span>●</span><span>●</span><span>●</span><span>●</span></div>
+        </section>
 
-Fotoğraf adları:
-- foto-1.jpg
-- foto-2.jpg
-- foto-3.jpg
+        <section class="surprise-section countdown-section" aria-labelledby="countdown-title">
+            <p class="birthday-kicker">Kutlamaya kalan zaman</p>
+            <h2 id="countdown-title">Büyük güne birlikte sayalım</h2>
+            <!-- Tarihi birthday-surprise.js içindeki BIRTHDAY_DATE bölümünden değiştir. -->
+            <div class="countdown" aria-live="polite">
+                <div><strong id="countdown-days">0</strong><span>gün</span></div>
+                <div><strong id="countdown-hours">0</strong><span>saat</span></div>
+                <div><strong id="countdown-minutes">0</strong><span>dakika</span></div>
+                <div><strong id="countdown-seconds">0</strong><span>saniye</span></div>
+            </div>
+            <p id="countdown-message" class="countdown-message"></p>
+        </section>
 
-Video adı:
-- video-mesaj.mp4
+        <section class="surprise-section" aria-labelledby="message-title">
+            <p class="birthday-kicker">Sana bir not</p>
+            <h2 id="message-title">Kalbimizdeki yerin hep ayrı</h2>
+            <div class="birthday-message">
+                <p>Her güzel anımızda senin emeğin, her zor günümüzde senin desteğin var. Gülüşün hiç eksilmesin; yeni yaşın sağlık, huzur ve dilediğin tüm güzelliklerle dolsun.</p>
+                <p><strong>Seni çok seviyoruz. İyi ki doğdun!</strong></p>
+            </div>
+        </section>
 
-Farklı ad kullanacaksan anneye-surpriz.html dosyasındaki ilgili dosya yollarını değiştir.
+        <section class="surprise-section" aria-labelledby="gallery-title">
+            <p class="birthday-kicker">En güzel anlarımız</p>
+            <h2 id="gallery-title">Fotoğraf albümü</h2>
+            <p class="section-intro">Fotoğraflarını <code>assets/anne/</code> klasörüne eklediğinde bu alan otomatik olarak albüme dönüşecek.</p>
+            <div class="memory-gallery">
+                <figure><img src="assets/anne/foto-1.jpg" alt="Birlikte güzel bir anımız" onerror="this.closest('figure').classList.add('media-empty')"><figcaption>Buraya ilk fotoğrafını ekle</figcaption></figure>
+                <figure><img src="assets/anne/foto-2.jpg" alt="Annemle güzel bir anımız" onerror="this.closest('figure').classList.add('media-empty')"><figcaption>Buraya ikinci fotoğrafını ekle</figcaption></figure>
+                <figure><img src="assets/anne/foto-3.jpg" alt="Aileden güzel bir anı" onerror="this.closest('figure').classList.add('media-empty')"><figcaption>Buraya üçüncü fotoğrafını ekle</figcaption></figure>
+            </div>
+        </section>
+
+        <section class="surprise-section" aria-labelledby="video-title">
+            <p class="birthday-kicker">Sana özel</p>
+            <h2 id="video-title">Video mesajı</h2>
+            <div class="video-frame video-embed">
+                <iframe
+                    src="https://www.youtube-nocookie.com/embed/blOL2G1UXpE?rel=0"
+                    title="Anneye özel video mesajı"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allowfullscreen>
+                </iframe>
+            </div>
+        </section>
+
+        <section class="surprise-section" aria-labelledby="timeline-title">
+            <p class="birthday-kicker">Sevgiyle biriktirdiklerimiz</p>
+            <h2 id="timeline-title">Küçük anı takvimi</h2>
+            <ol class="memory-timeline">
+                <li><span>01</span><div><strong>Birlikte gülüşlerimiz</strong><p>En sıradan günü bile güzel yapan o sıcacık anlar.</p></div></li>
+                <li><span>02</span><div><strong>Evimizin kalbi</strong><p>Her köşesinde senin emeğin ve sevgin olan yuvamız.</p></div></li>
+                <li><span>03</span><div><strong>Yeni yaş, yeni güzellikler</strong><p>Bu yıl da sağlık, huzur ve bolca mutluluk seninle olsun.</p></div></li>
+            </ol>
+        </section>
+
+        <button class="birthday-reset" id="birthday-logout" type="button">Sayfayı kilitle</button>
+    </main>
+    <footer><p>Senin için sevgiyle hazırlandı. ♥</p></footer>
+    <script src="birthday-surprise.js"></script>
+</body>
+</html>
