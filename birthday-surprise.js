@@ -1,6 +1,6 @@
 const ACCESS_KEY = 's-haber-birthday-access';
 // Bunu annenin doğum günü ile değiştir: Yıl-Ay-GünT00:00:00+03:00
-const BIRTHDAY_DATE = '2026-12-31T00:00:00+03:00';
+const BIRTHDAY_DATE = '2026-08-15T00:00:00+03:00';
 
 if (sessionStorage.getItem(ACCESS_KEY) !== 'granted') {
     window.location.replace('anneye-ozel.html');
@@ -36,4 +36,34 @@ setInterval(updateCountdown, 1000);
 document.getElementById('birthday-logout').addEventListener('click', () => {
     sessionStorage.removeItem(ACCESS_KEY);
     window.location.replace('anneye-ozel.html');
+});
+
+const compliments = [
+    'Sevgin, evimizi her zaman yuva yapan en güzel şey.',
+    'Gülüşün, en zor günlerde bile içimizi ısıtıyor.',
+    'Gücün ve sabrın hepimize ilham veriyor.',
+    'Sen varken her şey biraz daha güzel.',
+    'İyi ki bizim annemizsin. ♥'
+];
+let complimentIndex = 0;
+const complimentText = document.getElementById('compliment-text');
+document.getElementById('compliment-button').addEventListener('click', () => {
+    complimentText.textContent = compliments[complimentIndex++ % compliments.length];
+});
+
+document.getElementById('gift-button').addEventListener('click', () => {
+    document.getElementById('gift-message').hidden = false;
+    document.getElementById('gift-button').hidden = true;
+});
+
+document.getElementById('wish-form').addEventListener('submit', (event) => {
+    event.preventDefault();
+    const wish = document.getElementById('wish-input').value.trim();
+    if (!wish) return;
+    document.getElementById('wish-result').textContent = `Dileğin kalbimize yazıldı: “${wish}” ♥`;
+    event.currentTarget.reset();
+});
+
+document.querySelectorAll('.candle').forEach((candle) => {
+    candle.addEventListener('click', () => candle.classList.toggle('blown-out'));
 });
