@@ -1,0 +1,1 @@
+const valid=[];const id=(new URLSearchParams(location.search).get('haber')||'').replace(/\.md$/,'');if(valid.includes(id))location.replace('/haber/'+encodeURIComponent(id)+'/');else document.querySelector('[data-legacy-title]').textContent='Haber bulunamadı veya yayında değil.';

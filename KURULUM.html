@@ -1,0 +1,171 @@
+<!doctype html><html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>S-Haber · Kurulum kılavuzu</title><style>*{box-sizing:border-box}body{margin:0;background:#f3f5f7;color:#172130;font:16px/1.75 Arial,sans-serif}header{background:#172130;color:white;padding:34px max(24px,calc((100vw - 960px)/2))}header strong{font-size:32px;letter-spacing:-1.5px}header span{color:#ff767c}main{max-width:960px;margin:30px auto 60px;background:white;padding:40px 48px;border-top:4px solid #c9202b}h1{font-size:30px;line-height:1.2}h2{font-size:23px;margin-top:40px;border-top:1px solid #ddd;padding-top:26px}a{color:#a71924;overflow-wrap:anywhere}code{background:#edf0f3;padding:3px 5px;border-radius:3px;font-size:.9em;overflow-wrap:anywhere}table{border-collapse:collapse;width:100%;font-size:14px}td,th{padding:12px;text-align:left;border:1px solid #d9dfe6}th{background:#edf0f3}li{margin:8px 0}p{overflow-wrap:anywhere}@media(max-width:600px){main{margin:0;padding:24px 18px}table{display:block;overflow:auto}h1{font-size:26px}}@media print{body{background:white}main{margin:0;padding:10px;border:0}header{padding:10px;background:white;color:#172130}a{color:inherit}h2{break-after:avoid}tr{break-inside:avoid}}</style></head><body><header><strong>S<span>-</span>HABER.</strong><div>Site ve yönetim paneli · Kurulum kılavuzu</div></header><main><h1>S-Haber — yayın ve yönetim kurulumu</h1>
+<p>Bu paket, s-haber.com.tr için hazırlanan güncel site kaynaklarıdır. <strong>Canlı siteye henüz yüklenmedi.</strong> Haber yönetiminin çalışması için aşağıdaki Netlify ve GitHub bağlantıları bir kez kurulmalıdır.</p>
+<h2>Hazırlananlar</h2>
+<ul>
+<li>Mobil uyumlu ana sayfa, kategori ve Türkçe haber araması; açık/koyu görünüm.</li>
+<li>Her haber için kalıcı adres, tarih, yazar, özet ve güvenli biçimlendirilmiş metin.</li>
+<li>Kullanıcı adı ve şifreyle yönetim paneli: <code>/admin/</code>.</li>
+<li>Haber ekleme, taslak, yayınlama, düzenleme, silme ve metin önizleme.</li>
+<li>JPG, PNG ve WebP görsel yükleme (en fazla 3 MB).</li>
+<li>Anonim forma anketi; aynı tarayıcıdan tekrar oyu engelleyen kayıt.</li>
+<li>Site haritası, RSS, sayfa başlıkları, açıklamalar ve haber yapılandırılmış verisi.</li>
+<li>Künye, hata sayfası ve eski haber bağlantıları için yönlendirme.</li>
+<li>Dört deneme haberi taslak olarak korundu. İlk gerçek haber yayınlanana kadar ana sayfada dürüst bir boş durum görünür.</li>
+<li>Mevcut özel/doğum günü sayfaları ve fotoğrafları korundu.</li>
+</ul>
+<h2>1. Önce eski erişim anahtarını iptal edin</h2>
+<p>Eski <code>silincek/anket.html</code> dosyasında GitHub erişim anahtarı bulunuyordu. Yeni paketten kaldırıldı; eski sürüm ve depo geçmişi bu anahtarı hâlâ içerebilir. GitHub → Settings → Developer settings → Personal access tokens bölümünde ilgili eski anahtarı iptal edin. Anahtarı sohbet mesajına göndermeyin.</p>
+<h2>2. Paketi GitHub&#39;a yükleyin</h2>
+<ol>
+<li>ZIP&#39;i bilgisayarınızda açın.</li>
+<li><a href="https://github.com/susrybla-lab/s-haber">s-haber deposunu</a> açın.</li>
+<li><strong>Add file → Upload files</strong> yolunu kullanın. Paketin içindeki dosya ve klasörleri deponun ana dizinine yükleyin; ZIP dosyasını tek parça olarak veya fazladan bir <code>s-haber-main</code> klasörü altında yüklemeyin.</li>
+<li>Var olan dosyaların güncellenmesine izin verin. <code>package.json</code>, <code>package-lock.json</code>, <code>netlify.toml</code>, <code>tools</code>, <code>lib</code>, <code>netlify</code>, <code>admin</code>, <code>assets</code>, <code>haberler</code> ve <code>site.json</code> aynı ana dizinde bulunmalı.</li>
+<li>Değişiklikleri <code>main</code> dalına kaydedin. Dosyaları yükleme işlemi bitmeden Netlify&#39;da manuel yayın başlatmayın.</li>
+</ol>
+<p>Paketin içinde gerçek şifre veya yeni GitHub anahtarı yoktur. Daha sonra oluşturacağınız <code>.env.local</code> dosyasını GitHub&#39;a yüklemeyin. Güncel pakette bulunmayan eski <code>admin/config.yml</code> ve <code>silincek/oy-verenler.txt</code> dosyaları artık kullanılmıyor; bunları depodan kaldırabilirsiniz. <code>silincek/anket.html</code> dosyasının yeni sürümle değiştiğini özellikle kontrol edin.</p>
+<h2>3. Netlify projesini bağlayın</h2>
+<p>DNS kayıtları Netlify kullanımına işaret ediyor. <a href="https://app.netlify.com/">Netlify</a> hesabınızda <strong>s-haber.com.tr alan adının bağlı olduğu mevcut projeyi</strong> açın. Yeni bir alan adı satın almanız veya DNS kayıtlarını değiştirmeniz gerekmiyor.</p>
+<p>Proje GitHub&#39;a bağlı değilse, mevcut projenin yayın ayarlarından <code>susrybla-lab/s-haber</code> deposunu bağlayın. Kontrol edilecek değerler:</p>
+<table>
+<thead>
+<tr>
+<th>Ayar</th>
+<th>Değer</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Production branch</td>
+<td><code>main</code></td>
+</tr>
+<tr>
+<td>Base directory</td>
+<td>Boş (deponun kökü)</td>
+</tr>
+<tr>
+<td>Build command</td>
+<td><code>npm run build</code></td>
+</tr>
+<tr>
+<td>Publish directory</td>
+<td><code>dist</code></td>
+</tr>
+<tr>
+<td>Functions directory</td>
+<td><code>netlify/functions</code></td>
+</tr>
+<tr>
+<td>Node.js</td>
+<td>22 veya daha yeni</td>
+</tr>
+</tbody></table>
+<p>Bu ayarlar <code>netlify.toml</code> içinde hazırdır. Mevcut projede farklı ayarlar varsa yukarıdaki değerleri kullanın. Otomatik GitHub yayınları açık olmalı. <strong>Yalnızca statik dosyaları sürükleyip yayınlamak, yönetim panelinin sunucu işlevlerini kurmaz.</strong> GitHub bağlantılı Netlify yayını kullanın.</p>
+<h2>4. Yönetici hesabınızı oluşturun</h2>
+<p>Bu bilgisayarda Node.js mevcut. Paketi açtıktan sonra <strong>YONETICI-HESABI.cmd</strong> dosyasını çift tıklayın. Kullanıcı adınızı ve en az 12 karakterlik şifrenizi belirleyin. Şifre yazarken ekranda görünmez.</p>
+<p>Araç şifreyi düz metin olarak saklamaz. Paket klasöründe <code>.env.local</code> adlı, hesaba özel ayar dosyası oluşturur. Dosya zaten varsa üzerine yazmaz. Yeni hesap oluşturmak veya şifre değiştirmek için önce mevcut <code>.env.local</code> dosyasını güvenli bir yere taşıyın; aracı tekrar çalıştırın ve yeni değerleri Netlify&#39;a aktarın.</p>
+<p>Netlify → <strong>Project configuration → Environment variables → Add a variable → Import from a .env file</strong> bölümünden <code>.env.local</code> dosyasını içe aktarın. Değerler üretim ortamına uygulanmalı ve <strong>Functions</strong> kapsamını içermeli. Kullanıcı adınız, şifre özetiniz ve oturum anahtarınız bu şekilde sunucuya aktarılır. <a href="https://docs.netlify.com/build/environment-variables/get-started/">Netlify ortam değişkenleri</a> ve <a href="https://docs.netlify.com/build/functions/environment-variables/">Functions kapsamı</a>.</p>
+<h2>5. Panelin haberleri kaydedebilmesi için GitHub bağlantısını kurun</h2>
+<p>GitHub hesabınızda yeni bir <strong>fine-grained personal access token</strong> oluşturun:</p>
+<ul>
+<li>Repository access: yalnızca <code>s-haber</code> deposu.</li>
+<li>Repository permissions → <strong>Contents: Read and write</strong>.</li>
+<li>Süre sonunu takviminize not edin. Anahtar sona erdiğinde yenisini Netlify&#39;a girmeniz gerekir.</li>
+<li>Depo bir kuruluşa aitse kuruluş onayı gerekebilir.</li>
+</ul>
+<p><a href="https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens">GitHub anahtar oluşturma kılavuzu</a> · <a href="https://docs.github.com/en/rest/authentication/permissions-required-for-fine-grained-personal-access-tokens">GitHub izinleri</a>.</p>
+<p>Yeni anahtarı <strong>yalnızca Netlify ortam değişkenlerine</strong> <code>GITHUB_TOKEN</code> adıyla ekleyin. İstemci dosyalarına veya GitHub&#39;a yazmayın. Son durumda şu altı değişken bulunmalı:</p>
+<table>
+<thead>
+<tr>
+<th>Değişken</th>
+<th>Değerin kaynağı</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>ADMIN_USERNAME</code></td>
+<td>Hesap oluşturma aracında seçtiğiniz kullanıcı adı</td>
+</tr>
+<tr>
+<td><code>ADMIN_PASSWORD_HASH</code></td>
+<td>Aracın <code>.env.local</code> içine yazdığı şifre özeti</td>
+</tr>
+<tr>
+<td><code>SESSION_SECRET</code></td>
+<td>Aracın oluşturduğu rastgele oturum anahtarı</td>
+</tr>
+<tr>
+<td><code>GITHUB_TOKEN</code></td>
+<td>Yeni oluşturduğunuz, yalnızca bu depoya yetkili anahtar</td>
+</tr>
+<tr>
+<td><code>GITHUB_REPOSITORY</code></td>
+<td><code>susrybla-lab/s-haber</code></td>
+</tr>
+<tr>
+<td><code>GITHUB_BRANCH</code></td>
+<td><code>main</code></td>
+</tr>
+</tbody></table>
+<p>Ana dal doğrudan yazmaya kapalıysa panel kaydedemez. Bu sürüm, tek editörün doğrudan <code>main</code> dalına haber kaydettiği iş akışına göre hazırlandı. Taslaklar web sitesinin yayın klasörüne dahil edilmez; <strong>GitHub deponuz herkese açıksa taslak dosyaları GitHub üzerinden okunabilir.</strong> Yayın öncesi gizlilik gerekiyorsa depoyu özel kullanın ve Netlify bağlantısının buna yetkili olduğunu doğrulayın.</p>
+<h2>6. Yayınlayın ve hesabı deneyin</h2>
+<p>Netlify&#39;da <strong>Deploys → Trigger deploy</strong> ile yeni yayın başlatın. Başarılı olduğunu gördükten sonra:</p>
+<ol>
+<li><code>https://s-haber.com.tr/admin/</code> adresini açın; belirlediğiniz kullanıcı adı ve şifreyle giriş yapın.</li>
+<li>Yeni bir haber oluşturup <strong>Taslak kaydet</strong> seçin. Panelde taslak görünmeli, ana sayfada görünmemeli.</li>
+<li>Haberi açın, bir görsel yükleyin, metni önizleyin ve <strong>Yayınla</strong> seçin.</li>
+<li>GitHub kaydı Netlify&#39;da yeni yayın başlatır. Yayın tamamlandıktan sonra haber ana sayfada ve kendi adresinde görünmeli. Kaydetmek ile canlıda görünmek arasında yayın süresi kadar gecikme vardır.</li>
+<li>Haber aramasını, kategoriyi ve telefondaki görünümü deneyin.</li>
+<li>Anketi açın, oy verin ve sayfayı yenileyin. Oy korunmalı, aynı tarayıcıdan tekrar oy engellenmeli.</li>
+<li>Yönetimden çıkın; panelin giriş istediğini doğrulayın.</li>
+</ol>
+<p>Anket Netlify Blobs kullanır; eski güvensiz anketteki oyları içe aktarmaz. Yeni oylama sıfırdan başlar. Çerezin silinmesi veya başka tarayıcı kullanılması yeniden oy vermeye olanak sağlar; bu bir kimlik doğrulamalı seçim sistemi değildir. <a href="https://docs.netlify.com/build/data-and-storage/netlify-blobs/">Netlify Blobs</a>.</p>
+<h2>Künye ve iletişim için kalan bilgiler</h2>
+<p>Elimizde yalnızca Genel Yayın Yönetmeni <strong>İdris Samet Eker</strong> bilgisi vardı. Yayıncı ünvanı, iletişim e-postası, telefon ve adres uydurulmadı. Bu bilgileri <code>site.json</code> içindeki <code>publisher</code>, <code>email</code>, <code>phone</code>, <code>address</code> alanlarına girin; yeni yayında künye sayfasına eklenir. Alan adı değişirse <code>url</code> alanını da güncelleyin.</p>
+<p>Mevcut kişisel sürpriz sayfasındaki kod ekranı gerçek erişim güvenliği sağlamaz; bu sayfalar eski hâliyle korundu. Yönetici paneli bundan bağımsız, sunucu tarafından doğrulanan giriş kullanır.</p>
+<h2>Yapılan doğrulamalar ve sınırlar</h2>
+<p>13 otomatik test geçti: şifre doğrulama, oturum imzası/zaman aşımı, izinsiz erişim, başka siteden yazma isteği, güvenli metin işleme, Türkçe içerik, haber kaydetme/güncelleme/silme/çakışma, görsel tür kontrolü, tekrar oy engeli, taslakların yayın çıktısından dışlanması ve eski haber sayfalarının temizlenmesi. Paket oluşturma başarılı; bağımlılık denetimi bilinen açık bildirmedi.</p>
+<p>GitHub ve anket testlerinde deneme bağlantıları kullanıldı. Gerçek hesabınıza yazma, Netlify sunucu yayını, HTTPS çerezi ve tarayıcı görünüm testi canlı ortamda henüz doğrulanmadı. Yönetici bilgileri ve GitHub anahtarı bu oturumda girilmedi; GitHub&#39;a yükleme veya canlı yayın yapılmadı. Bu nedenle hesap kurulumu tamamlanmadan siteyi tamamen canlıya hazır kabul etmeyin.</p>
+<h2>Sorun giderme</h2>
+<table>
+<thead>
+<tr>
+<th>Sorun</th>
+<th>Kontrol</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>“Yönetici hesabı henüz yapılandırılmamış”</td>
+<td>Üç yönetici değişkeni, Functions kapsamı ve yeni yayın</td>
+</tr>
+<tr>
+<td>“GitHub bağlantısı yapılandırılmamış”</td>
+<td><code>GITHUB_TOKEN</code>, depo adı ve anahtarın süresi</td>
+</tr>
+<tr>
+<td>“GitHub bağlantısı tamamlanamadı”</td>
+<td>Contents yazma izni, kuruluş onayı ve dal koruması</td>
+</tr>
+<tr>
+<td>Haber kaydedildi ama görünmüyor</td>
+<td>Taslak durumu, yayın tarihi ve Netlify yayınının sonucu</td>
+</tr>
+<tr>
+<td>“Haber başka bir işlemde değişti”</td>
+<td>Haberi yeniden açın; son sürüm üzerinde düzenleyin</td>
+</tr>
+<tr>
+<td>Görsel yüklenmiyor</td>
+<td>JPG/PNG/WebP ve 3 MB sınırı</td>
+</tr>
+<tr>
+<td>Anket açılamıyor</td>
+<td><code>SESSION_SECRET</code>, Netlify Blobs ve sunucu günlükleri</td>
+</tr>
+<tr>
+<td>Çok fazla giriş denemesi</td>
+<td>Bir dakika bekleyin; giriş hız sınırı uygulanır</td>
+</tr>
+</tbody></table>
+<p>Giriş ve anket için iki adet Netlify hız sınırlama kuralı tanımlandı. <a href="https://docs.netlify.com/manage/security/secure-access-to-sites/rate-limiting/">Netlify hız sınırlama belgeleri</a>.</p>
+<p>Geliştirici kontrolü için: <code>npm ci</code>, <code>npm test</code>, <code>npm run build</code>. Yerel sayfa önizlemesi: <code>npm run dev</code>. Yerel önizleme sunucusu gerçek GitHub veya anket hizmetini taklit etmez; yalnızca sayfaları sunar.</p>
+</main></body></html>

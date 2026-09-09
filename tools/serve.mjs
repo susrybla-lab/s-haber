@@ -1,0 +1,11 @@
+import http from 'node:http';
+import {readFile,stat} from 'node:fs/promises';
+import path from 'node:path';
+import {fileURLToPath} from 'node:url';
+import {spawnSync} from 'node:child_process';
+const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
+const build=spawnSync(process.execPath,['tools/build.mjs'],{cwd:root,stdio:'inherit'});if(build.status!==0)process.exit(1);
+const out=path.join(root,'dist');
+const mime={'.html':'text/html; charset=utf-8','.css':'text/css','.js':'text/javascript','.svg':'image/svg+xml','.jpg':'image/jpeg','.jpeg':'image/jpeg','.png':'image/png','.webp':'image/webp','.xml':'application/xml','.txt':'text/plain'};
+const server=http.createServer(async(req,res)=>{try{const url=new URL(req.url,'http://localhost');if(url.pathname.startsWith('/api/')){res.writeHead(503,{'Content-Type':'application/json'});res.end(JSON.stringify({error:'Bu yerel görünümde sunucu bağlantısı yok. Yönetim ve anket, Netlify kurulumu tamamlandıktan sonra çalışır.'}));return;}let file=path.resolve(out,'.'+decodeURIComponent(url.pathname));if(file!==out&&!file.startsWith(out+path.sep)){res.writeHead(403);res.end();return;}try{if((await stat(file)).isDirectory())file=path.join(file,'index.html');const bytes=await readFile(file);res.writeHead(200,{'Content-Type':mime[path.extname(file)]||'application/octet-stream'});res.end(bytes);}catch{res.writeHead(404,{'Content-Type':'text/html; charset=utf-8'});res.end(await readFile(path.join(out,'404.html')));}}catch{res.writeHead(400);res.end();}});
+server.listen(4173,'127.0.0.1',()=>console.log('Local: http://127.0.0.1:4173'));

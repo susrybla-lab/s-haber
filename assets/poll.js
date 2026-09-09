@@ -1,0 +1,5 @@
+const form=document.getElementById('poll-form'),status=document.getElementById('poll-status');
+function display(data){document.querySelectorAll('[data-result]').forEach(el=>el.textContent=`${data.counts[Number(el.dataset.result)-1]} oy`);if(data.voted){form.querySelectorAll('input,button').forEach(el=>el.disabled=true);status.textContent='Oyunuz kaydedildi. Katıldığınız için teşekkürler.';}}
+async function request(options){const r=await fetch('/api/poll',options);let d;try{d=await r.json();}catch{throw new Error('Anket hizmetine ulaşılamıyor.');}if(!r.ok)throw new Error(d.error||'İşlem tamamlanamadı.');return d;}
+request().then(display).catch(e=>{status.textContent=e.message;form.querySelectorAll('input,button').forEach(el=>el.disabled=true);});
+form.addEventListener('submit',async e=>{e.preventDefault();const button=form.querySelector('button');button.disabled=true;try{display(await request({method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({choice:Number(new FormData(form).get('choice'))})}));}catch(err){status.textContent=err.message;button.disabled=false;}});
