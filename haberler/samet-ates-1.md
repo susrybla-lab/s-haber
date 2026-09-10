@@ -6,6 +6,6 @@ author: İdris Samet Eker
 image: /img/whatsapp-image-2025-12-23-at-22.53.00-1-.jpeg
 imageAlt: ""
 summary: ""
-draft: false
+draft: true
 ---
 sadasdasdasdsa
